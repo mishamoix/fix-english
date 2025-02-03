@@ -53,7 +53,7 @@ export default function Home() {
 				<textarea
 					placeholder='Type here'
 					ref={textAreaRef}
-					className='textarea w-full max-md:min-h-[33vh] min-h-72 text-base-content text-lg max-md:text-sm'
+					className='textarea w-full max-md:min-h-[25vh] min-h-72 text-base-content text-lg max-md:text-sm'
 					onKeyDown={(e) => {
 						if (e.key === 'Enter' && !e.shiftKey) {
 							e.preventDefault();
@@ -64,7 +64,7 @@ export default function Home() {
 
 				{resultText ? (
 					<div
-						className={`flex flex-row align-top relative textarea w-full max-md:min-h-[33vh] min-h-72 text-base-content text-lg max-md:text-sm opacity-90 border-4 ${
+						className={`flex flex-row align-top relative textarea w-full max-md:min-h-[25vh] min-h-72 text-base-content text-lg max-md:text-base opacity-90 border-4 ${
 							result
 								? result?.hasError
 									? 'border-rose-300'
@@ -98,7 +98,7 @@ export default function Home() {
 						)}
 					</div>
 				) : (
-					<p className='textarea w-full max-md:min-h-[33vh] min-h-72 text-base-content text-lg opacity-70 max-md:text-sm'>
+					<p className='textarea w-full max-md:min-h-[25vh] min-h-72 text-base-content text-lg opacity-70 max-md:text-base'>
 						{isLoading && (
 							<span className='loading loading-dots loading-sm'></span>
 						)}
