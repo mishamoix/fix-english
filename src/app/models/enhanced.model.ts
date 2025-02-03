@@ -10,8 +10,8 @@
 export interface EnhancedText {
 	hasError: boolean;
 	text: string;
-	error: string;
-	enchancedText: string;
-	formal: string;
-	informal: string;
+	error?: string;
+	enchancedText?: string;
+	formal?: string;
+	informal?: string;
 }

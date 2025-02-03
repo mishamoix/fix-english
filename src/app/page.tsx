@@ -35,24 +35,28 @@ export default function Home() {
 	})();
 
 	return (
-		<div className='bg-base-300 p-10 m-auto flex flex-col justify-center items-center gap-4'>
-			<textarea
-				placeholder='Type here'
-				ref={textAreaRef}
-				className='textarea w-full min-h-28 text-base-content text-lg'
-				onKeyDown={(e) => {
-					if (e.key === 'Enter' && !e.shiftKey) {
-						e.preventDefault();
-						handleTap();
-					}
-				}}
-			/>
+		<div className='p-10 m-auto flex flex-col justify-center items-center gap-4'>
+			<div className='flex flex-row max-md:flex-col gap-4 max-md:gap-6 w-full '>
+				<textarea
+					placeholder='Type here'
+					ref={textAreaRef}
+					className='textarea w-full min-h-72 text-base-content text-lg'
+					onKeyDown={(e) => {
+						if (e.key === 'Enter' && !e.shiftKey) {
+							e.preventDefault();
+							handleTap();
+						}
+					}}
+				/>
 
-			<>
 				{resultText ? (
 					<div
-						className={`textarea w-full min-h-28 text-base-content text-2xl opacity-90 ${
-							result && (result?.hasError ? 'bg-red-100' : 'bg-green-100')
+						className={`textarea w-full min-h-28 text-base-content text-2xl opacity-90 border-4 ${
+							result
+								? result?.hasError
+									? 'border-rose-300'
+									: 'border-green-300'
+								: 'border-white'
 						}`}
 						dangerouslySetInnerHTML={{
 							__html: resultText,
@@ -65,23 +69,31 @@ export default function Home() {
 						)}
 					</p>
 				)}
-				{result?.error && !isLoading && (
-					<p className='text-red-800 text-lg self-start'>{result?.error}</p>
-				)}
-			</>
+			</div>
+			{result?.error && !isLoading && (
+				<p className='text-red-800 text-lg self-start'>{result?.error}</p>
+			)}
 			<button className='btn btn-primary self-end' onClick={handleTap}>
 				Enhance
 			</button>
 
 			{result && !isLoading && (
 				<div className='flex self-start gap-4 flex-col w-full text-base-content text-lg'>
-					<p className='bg-green-100 py-6 px-8 rounded-xl'>
-						{result?.enchancedText}
-					</p>
-					<p className='bg-blue-100 py-6 px-8 rounded-xl'>{result?.formal}</p>
-					<p className='bg-orange-100 py-6 px-8 rounded-xl'>
-						{result?.informal}
-					</p>
+					{result?.enchancedText && (
+						<p className='py-6 px-8 rounded-xl border-2 border-emerald-600 shadow-sm'>
+							{result?.enchancedText}
+						</p>
+					)}
+					{result?.formal && (
+						<p className='py-6 px-8 rounded-xl shadow-sm border-2 border-blue-600'>
+							{result?.formal}
+						</p>
+					)}
+					{result?.informal && (
+						<p className='py-6 px-8 rounded-xl shadow-sm border-2 border-orange-600'>
+							{result?.informal}
+						</p>
+					)}
 				</div>
 			)}
 		</div>
