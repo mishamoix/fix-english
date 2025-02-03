@@ -20,7 +20,7 @@ export default function RootLayout({
 					rel='stylesheet'
 				/>
 			</head>
-			<body className={`bg-slate-100 font-sans antialiased h-screen`}>
+			<body className={`bg-slate-100 font-sans antialiased min-h-screen`}>
 				<Navbar />
 				{children}
 			</body>
