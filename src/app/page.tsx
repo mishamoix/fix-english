@@ -124,7 +124,7 @@ export default function Home() {
 			)}
 
 			{result && !isLoading && (
-				<div className='flex self-start gap-4 flex-col w-full text-base-content text-lg mt-10 max-md:mt-4 max-md:text-sm'>
+				<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full text-base-content text-lg mt-10 max-md:mt-4 max-md:text-sm'>
 					{result?.enchancedText && (
 						<TextVariant type='best' text={result?.enchancedText} />
 					)}
