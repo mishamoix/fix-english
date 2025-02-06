@@ -13,7 +13,8 @@ export async function POST(req: NextRequest) {
 					"• ❌ 'I have experience at working in a startup.' (Mixing 'at' with a verb is awkward.)",
 				'Another rullleeeesszzz',
 			],
-			enchancedText: 'I also have experience working in a small startup.',
+			enchancedText:
+				'I also have experience working in a small startup. I also have experience working in a small startup. I also have experience working in a small startup.',
 			formal: 'I possess experience working in a small startup.',
 			informal: "I've worked in a small startup.",
 		});

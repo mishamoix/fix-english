@@ -32,16 +32,16 @@ const TextVariant = ({
 		<div
 			className={`rounded-xl p-[2px] bg-gradient-to-l shadow-sm ${variants[type].borderColor} shadow-[0_0_8px_0px] ${variants[type].shadowColor}`}
 		>
-			<div
-				className={`rounded-[10px] flex flex-row items-center gap-2 py-3 px-4 bg-slate-100`}
-			>
-				<div
-					className='tooltip tooltip-right tooltip-primary'
-					data-tip={variants[type].description}
-				>
-					<p className='text-2xl'>{variants[type].emoji}</p>
+			<div className='bg-slate-100 h-full rounded-[10px] '>
+				<div className={`flex flex-row items-center gap-2 py-3 px-4 mb-auto`}>
+					<div
+						className='tooltip tooltip-right tooltip-primary'
+						data-tip={variants[type].description}
+					>
+						<p className='text-2xl'>{variants[type].emoji}</p>
+					</div>
+					<p>{text}</p>
 				</div>
-				<p>{text}</p>
 			</div>
 		</div>
 	);
