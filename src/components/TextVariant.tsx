@@ -35,7 +35,7 @@ const TextVariant = ({
 			<div className='bg-slate-100 h-full rounded-[10px] '>
 				<div className={`flex flex-row items-center gap-2 py-3 px-4 mb-auto`}>
 					<div
-						className='tooltip tooltip-right tooltip-primary'
+						className='tooltip tooltip-right tooltip-primary self-start'
 						data-tip={variants[type].description}
 					>
 						<p className='text-2xl'>{variants[type].emoji}</p>
