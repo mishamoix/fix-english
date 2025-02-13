@@ -28,9 +28,10 @@ export async function POST(req: NextRequest) {
 		if (!trimmedText || trimmedText === '') {
 			return NextResponse.json({ error: 'Text is required' }, { status: 400 });
 		}
+		console.log('Gpt requested');
 
 		const response = await openai.chat.completions.create({
-			model: 'gpt-4o-mini',
+			model: 'gpt-4o',
 			messages: [
 				{ role: 'system', content: SYSTEM_PROMPT },
 				{ role: 'user', content: trimmedText },
@@ -38,6 +39,7 @@ export async function POST(req: NextRequest) {
 			response_format: { type: 'json_object' },
 			temperature: 1.0,
 		});
+		console.log('GPT done');
 
 		const data = response.choices[0].message.content;
 		if (!data) {

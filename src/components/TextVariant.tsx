@@ -1,13 +1,13 @@
 const variants = {
 	best: {
 		borderColor: 'from-teal-500 to-teal-400',
-		shadowColor: 'shadow-teal-500/50',
+		shadowColor: 'shadow-teal-500',
 		emoji: '🌟',
 		description: 'The best version of the text',
 	},
 	formal: {
 		borderColor: 'from-blue-600 to-blue-400',
-		shadowColor: 'shadow-blue-500/50',
+		shadowColor: 'shadow-blue-500',
 		emoji: '💼',
 		description:
 			'Most formal version of the text, suitable for addressing the President',

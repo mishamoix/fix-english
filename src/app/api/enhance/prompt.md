@@ -1,4 +1,3 @@
-export const SYSTEM_PROMPT = `
 # Grammar Checking Command
 
 ## Overview
@@ -61,35 +60,34 @@ The system should generate three alternative versions of the corrected text:
 The output should also be available in JSON format with the following structure:
 
 {
-  "hasErrors": true,  
-  "text": "I **had gone** to the market yesterday, and **bought** some apples; they **were** fresh.",
-  "mistakes": [
-    {
-      "error": "has went",
-      "corrected": "had gone",
-      "explanation": "Incorrect verb form. 'Had gone' is the correct past perfect usage.",
-      "rule": "Past Perfect is used when describing a past action before another past action.",
-      "example": "I had gone to the market before she arrived."
-    },
-    {
-      "error": "buyed",
-      "corrected": "bought",
-      "explanation": "Incorrect past tense. 'Bought' is the correct form of 'buy'.",
-      "rule": "'Buy' is an irregular verb; its past tense is 'bought'.",
-      "example": "I bought some apples yesterday."
-    },
-    {
-      "error": "was",
-      "corrected": "were",
-      "explanation": "Incorrect verb form. 'Were' should be used instead of 'was' with 'they'.",
-      "rule": "'They' requires the plural form 'were'.",
-      "example": "The apples were fresh."
-    }
-  ],
-  "enhanced": {
-    "linkedin": "Yesterday, I went to the market and bought some fresh apples. They were of excellent quality and a great addition to my kitchen.",
-    "email": "I visited the market yesterday and purchased some apples. They were fresh and of high quality.",
-    "whatsapp": "Yo! Went 2 the market yday, got some super fresh apples. They were lit! 🍏🔥"
-  }
+"hasErrors": true,  
+ "text": "I **had gone** to the market yesterday, and **bought** some apples; they **were** fresh.",
+"mistakes": [
+{
+"error": "has went",
+"corrected": "had gone",
+"explanation": "Incorrect verb form. 'Had gone' is the correct past perfect usage.",
+"rule": "Past Perfect is used when describing a past action before another past action.",
+"example": "I had gone to the market before she arrived."
+},
+{
+"error": "buyed",
+"corrected": "bought",
+"explanation": "Incorrect past tense. 'Bought' is the correct form of 'buy'.",
+"rule": "'Buy' is an irregular verb; its past tense is 'bought'.",
+"example": "I bought some apples yesterday."
+},
+{
+"error": "was",
+"corrected": "were",
+"explanation": "Incorrect verb form. 'Were' should be used instead of 'was' with 'they'.",
+"rule": "'They' requires the plural form 'were'.",
+"example": "The apples were fresh."
 }
-`;
+],
+"enhanced": {
+"linkedin": "Yesterday, I went to the market and bought some fresh apples. They were of excellent quality and a great addition to my kitchen.",
+"email": "I visited the market yesterday and purchased some apples. They were fresh and of high quality.",
+"whatsapp": "Yo! Went 2 the market yday, got some super fresh apples. They were lit! 🍏🔥"
+}
+}

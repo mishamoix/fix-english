@@ -1,17 +1,28 @@
-// {
-// "hasError": true | false - whether there were global improvements
-// "text": just the text
-// "error": optionally what rules were violated
-// "enchancedText": just improved text by a native speaker
-// "formal": formal text
-// "informal": informal text
-// }
+export const makeFullMistake = (mistake: Mistake) => {
+	return `${mistake.error}
+- ${mistake.explanation}
+- ${mistake.rule}
+- ${mistake.example}
+	`;
+};
+
+export interface Mistake {
+	error: string;
+	corrected: string;
+	explanation: string;
+	rule: string;
+	example: string;
+}
+
+export interface EnhancedStrings {
+	linkedin: string;
+	email: string;
+	whatsapp: string;
+}
 
 export interface EnhancedText {
-	hasError: boolean;
+	hasErrors: boolean;
 	text: string;
-	error?: string[];
-	enchancedText?: string;
-	formal?: string;
-	informal?: string;
+	mistakes?: Mistake[];
+	enhanced?: EnhancedStrings;
 }

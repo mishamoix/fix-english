@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { EnhancedText } from './models/enhanced.model';
+import { EnhancedText, makeFullMistake } from './models/enhanced.model';
 import TextVariant from '@/components/TextVariant';
 
 export default function Home() {
@@ -43,7 +43,7 @@ export default function Home() {
 
 	const handleCopy = () => {
 		if (result) {
-			const cleanText = result.text.replace(/<\/?[^>]+(>|$)/g, '');
+			const cleanText = result.text.replace(/\*\*/g, '');
 			navigator.clipboard.writeText(cleanText);
 		}
 	};
@@ -66,7 +66,7 @@ export default function Home() {
 					<div
 						className={`flex flex-row align-top relative textarea w-full max-md:min-h-[25vh] min-h-72 text-base-content text-lg max-md:text-base opacity-90 border-4 ${
 							result
-								? result?.hasError
+								? result?.hasErrors
 									? 'border-rose-300'
 									: 'border-green-500'
 								: 'border-white'
@@ -75,7 +75,7 @@ export default function Home() {
 						<div
 							className='flex-1'
 							dangerouslySetInnerHTML={{
-								__html: resultText,
+								__html: resultText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>'),
 							}}
 						/>
 						{result && (
@@ -112,12 +112,14 @@ export default function Home() {
 				{isLoading ? 'Enhancing' : 'Enhance'}
 				{isLoading && <span className='loading loading-dots loading-sm'></span>}
 			</button>
-			{result?.error && !isLoading && (
+			{result?.mistakes && !isLoading && (
 				<div className=' text-red-900 text-lg max-md:text-sm self-start flex flex-col gap-4 mt-10 max-md:mt-4'>
-					{result?.error.map((error, index) => (
+					{result?.mistakes.map((mistake, index) => (
 						<div className='flex flex-row gap-2' key={index}>
 							<span>{index + 1}.</span>
-							<span className='whitespace-pre-line'>{error}</span>
+							<span className='whitespace-pre-line'>
+								{makeFullMistake(mistake)}
+							</span>
 						</div>
 					))}
 				</div>
@@ -125,14 +127,14 @@ export default function Home() {
 
 			{result && !isLoading && (
 				<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full text-base-content text-lg mt-10 max-md:mt-4 max-md:text-sm'>
-					{result?.enchancedText && (
-						<TextVariant type='best' text={result?.enchancedText} />
+					{result?.enhanced && (
+						<TextVariant type='best' text={result?.enhanced.linkedin} />
 					)}
-					{result?.formal && (
-						<TextVariant type='formal' text={result?.formal} />
+					{result?.enhanced && (
+						<TextVariant type='formal' text={result?.enhanced.email} />
 					)}
-					{result?.informal && (
-						<TextVariant type='informal' text={result?.informal} />
+					{result?.enhanced && (
+						<TextVariant type='informal' text={result?.enhanced.whatsapp} />
 					)}
 				</div>
 			)}
