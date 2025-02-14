@@ -1,11 +1,3 @@
-export const makeFullMistake = (mistake: Mistake) => {
-	return `${mistake.error}
-- ${mistake.explanation}
-- ${mistake.rule}
-- ${mistake.example}
-	`;
-};
-
 export interface Mistake {
 	error: string;
 	corrected: string;
@@ -21,8 +13,14 @@ export interface EnhancedStrings {
 }
 
 export interface EnhancedText {
-	hasErrors: boolean;
 	text: string;
+	hasMistakes: boolean;
 	mistakes?: Mistake[];
 	enhanced?: EnhancedStrings;
 }
+
+export interface ApiError {
+	error: string;
+}
+
+export type ApiResponse = EnhancedText | ApiError;

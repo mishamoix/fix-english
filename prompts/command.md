@@ -8,6 +8,8 @@ This command is designed to check English text for grammar, punctuation, and spe
 
 ### Error Highlighting
 
+- Not placing a period at the end of a sentence is not considered a mistake.
+
 - Errors should be highlighted in markdown format using double asterisks (**error**).
 - Only major stylistic issues should be flagged; minor stylistic issues should be ignored.
 - Common abbreviations (wtf, brb, bc, bg) should be ignored.
@@ -63,35 +65,35 @@ The output MUST be in JSON format with the following structure:
 
 ```json
 {
-	"hasErrors": true,
-	"text": "I **had gone** to the market yesterday, and **bought** some apples; they **were** fresh.",
-	"mistakes": [
-		{
-			"error": "has went",
-			"corrected": "had gone",
-			"explanation": "Incorrect verb form. 'Had gone' is the correct past perfect usage.",
-			"rule": "Past Perfect is used when describing a past action before another past action.",
-			"example": "I had gone to the market before she arrived."
-		},
-		{
-			"error": "buyed",
-			"corrected": "bought",
-			"explanation": "Incorrect past tense. 'Bought' is the correct form of 'buy'.",
-			"rule": "'Buy' is an irregular verb; its past tense is 'bought'.",
-			"example": "I bought some apples yesterday."
-		},
-		{
-			"error": "was",
-			"corrected": "were",
-			"explanation": "Incorrect verb form. 'Were' should be used instead of 'was' with 'they'.",
-			"rule": "'They' requires the plural form 'were'.",
-			"example": "The apples were fresh."
-		}
-	],
-	"enhanced": {
-		"linkedin": "Yesterday, I went to the market and bought some fresh apples. They were of excellent quality and a great addition to my kitchen.",
-		"email": "I visited the market yesterday and purchased some apples. They were fresh and of high quality.",
-		"whatsapp": "Yo! Went 2 the market yday, got some super fresh apples. They were lit!"
-	}
+  "hasMistakes": true,  
+  "text": "I **had gone** to the market yesterday, and **bought** some apples; they **were** fresh.",
+  "mistakes": [
+    {
+      "error": "has went",
+      "corrected": "had gone",
+      "explanation": "Incorrect verb form. 'Had gone' is the correct past perfect usage.",
+      "rule": "Past Perfect is used when describing a past action before another past action.",
+      "example": "I had gone to the market before she arrived."
+    },
+    {
+      "error": "buyed",
+      "corrected": "bought",
+      "explanation": "Incorrect past tense. 'Bought' is the correct form of 'buy'.",
+      "rule": "'Buy' is an irregular verb; its past tense is 'bought'.",
+      "example": "I bought some apples yesterday."
+    },
+    {
+      "error": "was",
+      "corrected": "were",
+      "explanation": "Incorrect verb form. 'Were' should be used instead of 'was' with 'they'.",
+      "rule": "'They' requires the plural form 'were'.",
+      "example": "The apples were fresh."
+    }
+  ],
+  "enhanced": {
+    "linkedin": "Yesterday, I went to the market and bought some fresh apples. They were of excellent quality and a great addition to my kitchen.",
+    "email": "I visited the market yesterday and purchased some apples. They were fresh and of high quality.",
+    "whatsapp": "Yo! Went 2 the market yday, got some super fresh apples. They were lit!"
+  }
 }
 ```

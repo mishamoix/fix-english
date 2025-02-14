@@ -8,6 +8,28 @@ import { cleanText } from '@/utils';
 
 export async function POST(req: NextRequest) {
 	try {
+		// if (process.env.NODE_ENV === 'development') {
+		// 	return NextResponse.json({
+		// 		hasMistakes: true,
+		// 		text: 'How is **your**',
+		// 		mistakes: [
+		// 			{
+		// 				error: 'yor',
+		// 				corrected: 'your',
+		// 				explanation:
+		// 					"Spelling error. 'Your' is the correct possessive form of 'you'.",
+		// 				rule: "'Your' indicates possession, meaning something that belongs to 'you'.",
+		// 				example: 'Is your phone working?',
+		// 			},
+		// 		],
+		// 		enhanced: {
+		// 			linkedin: 'How is your recent project progressing?',
+		// 			email: 'I hope this email finds you well. How is your current task?',
+		// 			whatsapp: "How's ur?",
+		// 		},
+		// 	});
+		// }
+
 		const { text } = await req.json();
 
 		const trimmedText = cleanText(text);

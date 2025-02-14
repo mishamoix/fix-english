@@ -1,9 +1,9 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { EnhancedText, makeFullMistake } from './models/enhanced.model';
+import { EnhancedText } from './models';
 import TextVariant from '@/components/TextVariant';
-
+import { makeFullMistake } from '@/utils';
 export default function Home() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [result, setResult] = useState<EnhancedText | null>(null);
@@ -66,7 +66,7 @@ export default function Home() {
 					<div
 						className={`flex flex-row align-top relative textarea w-full max-md:min-h-[25vh] min-h-72 text-base-content text-lg max-md:text-base opacity-90 border-4 ${
 							result
-								? result?.hasErrors
+								? result?.hasMistakes
 									? 'border-rose-300'
 									: 'border-green-500'
 								: 'border-white'
@@ -113,7 +113,7 @@ export default function Home() {
 				{isLoading && <span className='loading loading-dots loading-sm'></span>}
 			</button>
 			{result?.mistakes && !isLoading && (
-				<div className='flex flex-col self-start gap-4 mt-10 text-lg text-red-900  max-md:text-sm max-md:mt-4'>
+				<div className='flex flex-col self-start gap-4 mt-10 text-lg text-red-900 max-md:text-sm max-md:mt-4'>
 					{result?.mistakes.map((mistake, index) => (
 						<div className='flex flex-row gap-2' key={index}>
 							<span>{index + 1}.</span>

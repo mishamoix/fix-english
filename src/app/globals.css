@@ -46,3 +46,10 @@ body {
 		@apply text-lg leading-7 font-montserrat text-slate-gray;
 	}
 }
+
+/* Added new component style for card */
+@layer components {
+	.card {
+		@apply px-6 py-4 border rounded-lg shadow-xl border-slate-100 shadow-slate-200;
+	}
+}
