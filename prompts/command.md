@@ -57,7 +57,7 @@ The system should generate three alternative versions of the corrected text:
 
 ### JSON Output
 
-The output should also be available in JSON format with the following structure:
+The output MUST be in JSON format with the following structure:
 
 {
 "hasErrors": true,  

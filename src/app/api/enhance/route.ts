@@ -1,25 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
+import anthropic from '@/utils/anthropicClient';
 import openai from '@/utils/openaiClient';
-import { SYSTEM_PROMPT } from './systemPrompt';
-export async function POST(req: NextRequest) {
-	// if (process.env.NODE_ENV === 'development') {
-	// 	await new Promise((resolve) => setTimeout(resolve, 500));
-	// 	return NextResponse.json({
-	// 		hasError: true,
-	// 		text: 'Also have <b>experience working</b> in a small startup. Also have <b>experience working</b> in a small startup. Also have <b>experience working</b> in a small startup. Also have <b>experience working</b> in a small startup.',
-	// 		error: [
-	// 			"'At' is a preposition that typically refers to a location or specific point (e.g., 'I work at Google'). When describing experience, we use 'working in' (or 'working with/for') to emphasize the activity or environment you were part of. 'Experience at' is grammatically possible, but it would require a noun (not a verb). For example:\n" +
-	// 				"• ✅ 'I have experience at a small startup.' (Here, 'startup' is a noun.)\n" +
-	// 				"• ❌ 'I have experience at working in a startup.' (Mixing 'at' with a verb is awkward.)",
-	// 			'Another rullleeeesszzz',
-	// 		],
-	// 		enchancedText:
-	// 			'I also have experience working in a small startup. I also have experience working in a small startup. I also have experience working in a small startup.',
-	// 		formal: 'I possess experience working in a small startup.',
-	// 		informal: "I've worked in a small startup.",
-	// 	});
-	// }
+import path from 'path';
+import fs from 'fs/promises';
 
+const LLM = 'chatgpt'; // "anthropic"
+
+const ANTHROPIC_MODEL = 'claude-3-5-sonnet-latest';
+const OPENAI_MODEL = 'gpt-4o';
+
+export async function POST(req: NextRequest) {
 	try {
 		const { text } = await req.json();
 
@@ -28,20 +18,36 @@ export async function POST(req: NextRequest) {
 		if (!trimmedText || trimmedText === '') {
 			return NextResponse.json({ error: 'Text is required' }, { status: 400 });
 		}
+		const systemPrompt = await getSystemPrompt();
 		console.log('Gpt requested');
 
-		const response = await openai.chat.completions.create({
-			model: 'gpt-4o',
-			messages: [
-				{ role: 'system', content: SYSTEM_PROMPT },
-				{ role: 'user', content: trimmedText },
-			],
-			response_format: { type: 'json_object' },
-			temperature: 1.0,
-		});
+		let data: string | null = null;
+		if (LLM === 'chatgpt') {
+			const response = await openai.chat.completions.create({
+				model: OPENAI_MODEL,
+				messages: [
+					{ role: 'system', content: systemPrompt },
+					{ role: 'user', content: trimmedText },
+				],
+				response_format: { type: 'json_object' },
+				temperature: 1.0,
+			});
+			data = response.choices[0].message.content;
+		} else {
+			const response = await anthropic.messages.create({
+				max_tokens: 1024,
+				messages: [
+					{ role: 'assistant', content: systemPrompt },
+					{ role: 'user', content: trimmedText },
+				],
+				model: ANTHROPIC_MODEL,
+			});
+			if (response.content[0].type === 'text') {
+				data = response.content[0].text;
+			}
+		}
 		console.log('GPT done');
 
-		const data = response.choices[0].message.content;
 		if (!data) {
 			return NextResponse.json({ error: 'No data' }, { status: 400 });
 		}
@@ -58,4 +64,18 @@ export function GET() {
 		{ error: 'GET method not allowed' },
 		{ status: 405 }
 	);
+}
+
+async function getSystemPrompt(filePath?: string): Promise<string> {
+	try {
+		// Determine the file path (default location if not provided)
+		const defaultPath = path.join(process.cwd(), 'prompts', 'command.md');
+		const resolvedPath = filePath || defaultPath;
+
+		// Read and return the file content
+		return await fs.readFile(resolvedPath, 'utf8');
+	} catch (error) {
+		console.error('Error reading system prompt:', error);
+		throw new Error('Failed to load system prompt');
+	}
 }
