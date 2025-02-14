@@ -4,7 +4,7 @@ import openai from '@/utils/openaiClient';
 import path from 'path';
 import fs from 'fs/promises';
 
-const LLM = 'chatgpt'; // "anthropic"
+const LLM = 'chatgpt';
 
 const ANTHROPIC_MODEL = 'claude-3-5-sonnet-latest';
 const OPENAI_MODEL = 'gpt-4o';
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 		console.log('Gpt requested');
 
 		let data: string | null = null;
-		if (LLM === 'chatgpt') {
+		if (LLM == 'chatgpt') {
 			const response = await openai.chat.completions.create({
 				model: OPENAI_MODEL,
 				messages: [
