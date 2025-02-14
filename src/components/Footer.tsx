@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
 
 	return (
 		<footer className='py-4 mt-auto border-t bg-base-200 text-base-content'>
-			<div className='container flex flex-col items-center justify-between px-4 mx-auto sm:flex-row'>
+			<div className='container flex flex-col items-center justify-between px-4 mx-auto sm:flex-row max-sm:text-center'>
 				<div>
 					<div className='text-lg font-bold text-slate-800'>{PROJECT_NAME}</div>
 					<p className='text-sm text-slate-500'>{PROJECT_DESCRIPTION}</p>

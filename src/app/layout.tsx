@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { PROJECT_NAME, PROJECT_DESCRIPTION } from '@/constants';
 import { QueryProvider } from '@/providers/QueryProvider';
+import { Bounce, ToastContainer } from 'react-toastify';
 
 export const metadata: Metadata = {
 	title: PROJECT_NAME,
@@ -34,6 +35,18 @@ export default function RootLayout({
 				<QueryProvider>
 					<main className='flex-grow'>{children}</main>
 				</QueryProvider>
+				<ToastContainer
+					position='bottom-center'
+					autoClose={1000}
+					stacked={false}
+					hideProgressBar={false}
+					newestOnTop={true}
+					closeOnClick={true}
+					rtl={false}
+					pauseOnFocusLoss
+					theme='light'
+					transition={Bounce}
+				/>
 				<Footer />
 			</body>
 		</html>
