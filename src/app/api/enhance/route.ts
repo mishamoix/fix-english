@@ -3,17 +3,14 @@ import anthropic from '@/utils/anthropicClient';
 import openai from '@/utils/openaiClient';
 import path from 'path';
 import fs from 'fs/promises';
-
-const LLM = 'chatgpt';
-
-const ANTHROPIC_MODEL = 'claude-3-5-sonnet-latest';
-const OPENAI_MODEL = 'gpt-4o';
+import { DEFAULT_LLM, OPENAI_MODEL, ANTHROPIC_MODEL } from '@/constants';
+import { cleanText } from '@/utils';
 
 export async function POST(req: NextRequest) {
 	try {
 		const { text } = await req.json();
 
-		const trimmedText = text.trimStart().trimEnd();
+		const trimmedText = cleanText(text);
 
 		if (!trimmedText || trimmedText === '') {
 			return NextResponse.json({ error: 'Text is required' }, { status: 400 });
@@ -22,7 +19,7 @@ export async function POST(req: NextRequest) {
 		console.log('Gpt requested');
 
 		let data: string | null = null;
-		if (LLM == 'chatgpt') {
+		if (DEFAULT_LLM === 'chatgpt') {
 			const response = await openai.chat.completions.create({
 				model: OPENAI_MODEL,
 				messages: [

@@ -3,19 +3,46 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+	--background: #ffffff;
+	--foreground: #171717;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+	color: var(--foreground);
+	background: var(--background);
+	font-family: Inter, Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+	.padding {
+		@apply py-12 sm:py-24 max-md:px-4;
+	}
+
+	.padding-x {
+		@apply px-8 sm:px-16;
+	}
+
+	.padding-y {
+		@apply py-12 sm:py-24;
+	}
+
+	.padding-l {
+		@apply pl-8 sm:pl-16;
+	}
+
+	.padding-r {
+		@apply pr-8 sm:pr-16;
+	}
+
+	.padding-t {
+		@apply pt-12 sm:pt-24;
+	}
+
+	.padding-b {
+		@apply pb-12 sm:pb-24;
+	}
+
+	.info-text {
+		@apply text-lg leading-7 font-montserrat text-slate-gray;
+	}
 }

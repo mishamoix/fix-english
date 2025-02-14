@@ -1,11 +1,16 @@
 import React from 'react';
+import { PROJECT_NAME } from '@/constants';
 
 const Navbar: React.FC = () => {
 	return (
-		<div className='flex justify-center items-center bg-base-100'>
-			<h1 className='text-4xl font-bold text-accent-content tracking-tighter py-6'>
-				Fix English
-			</h1>
+		<div className='flex items-center justify-between h-16 border-b px-14 border-slate-200'>
+			<a
+				href='/'
+				className='py-2 text-2xl font-bold tracking-tighter transition-colors text-accent-content hover:text-primary'
+			>
+				{PROJECT_NAME}
+			</a>
+			<button className='btn btn-primary btn-sm'>Login</button>
 		</div>
 	);
 };

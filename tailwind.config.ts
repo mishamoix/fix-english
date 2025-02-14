@@ -13,7 +13,7 @@ export default {
 				foreground: 'var(--foreground)',
 			},
 			fontFamily: {
-				sans: ['"Nunito"', 'ui-sans-serif', 'system-ui'],
+				sans: ['Inter', 'ui-sans-serif', 'system-ui'],
 			},
 		},
 	},
