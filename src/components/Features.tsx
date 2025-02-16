@@ -39,7 +39,7 @@ export default function Features() {
 							className='transition-all duration-300 ease-in-out border shadow-md card bg-base-100 border-slate-100 hover:shadow-lg '
 						>
 							<div className='text-left card-body'>
-								<Icon className='w-10 h-10 mb-4 text-primary' />
+								<Icon className='size-10 mb-4 text-primary' />
 								<h2 className='card-title'>{feature.title}</h2>
 								<p>{feature.description}</p>
 							</div>

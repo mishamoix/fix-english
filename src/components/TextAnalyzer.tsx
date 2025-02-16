@@ -7,12 +7,13 @@ import {
 	CheckCircleIcon,
 	DocumentDuplicateIcon,
 	ExclamationCircleIcon,
+	LanguageIcon,
 	ShieldExclamationIcon,
+	XCircleIcon,
 } from '@heroicons/react/24/outline';
 import { cleanText } from '@/utils';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { ApiResponse, EnhancedText } from '@/app/models';
-import { XCircleIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-toastify';
 
 export default function TextAnalyzer() {
@@ -20,15 +21,18 @@ export default function TextAnalyzer() {
 
 	const hasAnyText = cleanText(currentText).length > 0;
 
-	const { data, refetch, isFetching } = useQuery<EnhancedText, Error>({
-		queryKey: ['enhance'],
-		queryFn: async () => {
+	const { mutate, data, error, isPending } = useMutation<
+		EnhancedText,
+		Error,
+		{ text: string }
+	>({
+		mutationFn: async ({ text }) => {
 			const response = await fetch('/api/enhance', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({ text: currentText }),
+				body: JSON.stringify({ text }),
 			});
 
 			if (!response.ok) {
@@ -37,18 +41,14 @@ export default function TextAnalyzer() {
 
 			const data: ApiResponse = await response.json();
 
+			console.log('data', data);
 			if ('error' in data) {
 				throw new Error(data.error);
 			}
 
 			return data;
 		},
-		enabled: false,
-		refetchOnWindowFocus: false,
-		refetchOnMount: false,
-		refetchOnReconnect: false,
-		refetchInterval: false,
-		staleTime: 0,
+		retry: 0,
 	});
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -64,8 +64,8 @@ export default function TextAnalyzer() {
 	};
 
 	const sendRequestIfCan = () => {
-		if (hasAnyText && !isFetching) {
-			refetch().catch((error) => console.error(error));
+		if (hasAnyText && !isPending) {
+			mutate({ text: currentText });
 		}
 	};
 
@@ -83,7 +83,10 @@ export default function TextAnalyzer() {
 	};
 
 	const enhancedTextArray = data?.enhanced
-		? Object.entries(data.enhanced).map(([style, text]) => ({ style, text }))
+		? Object.entries(data.enhanced).map(([style, text]) => ({
+				style,
+				text,
+		  }))
 		: [];
 
 	return (
@@ -99,7 +102,13 @@ export default function TextAnalyzer() {
 						className='w-full max-md:min-h-[25vh] min-h-40 text-base-content text-base max-md:text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary'
 					/>
 					<div className='flex items-center justify-between pt-4'>
-						<p className={`flex items-center gap-2 text-slate-800`}>
+						<p className='flex items-center gap-2 text-slate-800'>
+							{error && (
+								<>
+									<LanguageIcon className='size-6 text-error' />
+									<span className='text-error'>{error.message}</span>
+								</>
+							)}
 							{data && (
 								<>
 									{data?.hasMistakes ? (
@@ -114,11 +123,11 @@ export default function TextAnalyzer() {
 
 						<button
 							type='submit'
-							className={` btn btn-primary ${
-								!hasAnyText || isFetching ? 'btn-disabled' : ''
+							className={`btn btn-primary ${
+								!hasAnyText || isPending ? 'btn-disabled' : ''
 							}`}
 						>
-							{isFetching ? (
+							{isPending ? (
 								<span className='loading loading-dots loading-sm'></span>
 							) : (
 								'Analyze text'
