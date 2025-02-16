@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
-import { SUPPORT_EMAIL } from '@/constants';
+import { SUPPORT_EMAIL } from '@/config';
 
 const ContactButton: React.FC = () => {
 	return (

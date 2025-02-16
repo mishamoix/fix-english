@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { EnhancedText } from './models';
 import TextVariant from '@/components/TextVariant';
-import { makeFullMistake } from '@/utils';
+import { makeFullMistake } from '@/libs';
 export default function Home() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [result, setResult] = useState<EnhancedText | null>(null);

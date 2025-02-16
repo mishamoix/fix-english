@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import anthropic from '@/utils/anthropicClient';
-import openai from '@/utils/openaiClient';
+import anthropic from '@/libs/anthropicClient';
+import openai from '@/libs/openaiClient';
 import path from 'path';
 import fs from 'fs/promises';
-import { DEFAULT_LLM, OPENAI_MODEL, ANTHROPIC_MODEL } from '@/constants';
-import { cleanText } from '@/utils';
+import config, { MAX_CHARACTERS } from '@/config';
+import { cleanText } from '@/libs';
 
 export async function POST(req: NextRequest) {
 	try {
@@ -35,15 +35,23 @@ export async function POST(req: NextRequest) {
 		const trimmedText = cleanText(text);
 
 		if (!trimmedText || trimmedText === '') {
-			return NextResponse.json({ error: 'Text is required' }, { status: 400 });
+			return NextResponse.json({ error: 'Text is required' }, { status: 200 });
+		}
+		if (trimmedText.length > MAX_CHARACTERS) {
+			return NextResponse.json(
+				{
+					error: `Text exceeds maximum character limit of ${MAX_CHARACTERS}`,
+				},
+				{ status: 200 }
+			);
 		}
 		const systemPrompt = await getSystemPrompt();
 		console.log('Gpt requested');
 
 		let data: string | null = null;
-		if (DEFAULT_LLM === 'chatgpt') {
+		if (config.llm.default === 'chatgpt') {
 			const response = await openai.chat.completions.create({
-				model: OPENAI_MODEL,
+				model: config.llm.openaiModel,
 				messages: [
 					{ role: 'system', content: systemPrompt },
 					{ role: 'user', content: trimmedText },
@@ -59,7 +67,7 @@ export async function POST(req: NextRequest) {
 					{ role: 'assistant', content: systemPrompt },
 					{ role: 'user', content: trimmedText },
 				],
-				model: ANTHROPIC_MODEL,
+				model: config.llm.anthropicModel,
 			});
 			if (response.content[0].type === 'text') {
 				data = response.content[0].text;

@@ -2,14 +2,12 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { PROJECT_NAME, PROJECT_DESCRIPTION } from '@/constants';
+import config from '@/config';
 import { QueryProvider } from '@/providers/QueryProvider';
 import { Bounce, ToastContainer } from 'react-toastify';
+import { getSEOTags } from '@/libs/seo';
 
-export const metadata: Metadata = {
-	title: PROJECT_NAME,
-	description: PROJECT_DESCRIPTION,
-};
+export const metadata = getSEOTags();
 
 export default function RootLayout({
 	children,

@@ -1,12 +1,7 @@
 import React from 'react';
 import { CodeBracketIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
-import {
-	PROJECT_NAME,
-	PROJECT_DESCRIPTION,
-	GITHUB_URL,
-	SUPPORT_EMAIL,
-} from '@/constants';
-
+import config, { GITHUB_URL } from '@/config';
+import { SUPPORT_EMAIL } from '@/config';
 const Footer: React.FC = () => {
 	const currentYear = new Date().getFullYear();
 
@@ -14,8 +9,10 @@ const Footer: React.FC = () => {
 		<footer className='py-4 mt-auto border-t bg-base-200 text-base-content'>
 			<div className='container flex flex-col items-center justify-between px-4 mx-auto sm:flex-row max-sm:text-center'>
 				<div>
-					<div className='text-lg font-bold text-slate-800'>{PROJECT_NAME}</div>
-					<p className='text-sm text-slate-500'>{PROJECT_DESCRIPTION}</p>
+					<div className='text-lg font-bold text-slate-800'>
+						{config.appName}
+					</div>
+					<p className='text-sm text-slate-500'>{config.appDescription}</p>
 				</div>
 				<div className='flex items-center gap-2 mt-2 sm:mt-0'>
 					<a

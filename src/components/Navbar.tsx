@@ -1,5 +1,5 @@
 import React from 'react';
-import { PROJECT_NAME } from '@/constants';
+import config from '@/config';
 
 const Navbar: React.FC = () => {
 	return (
@@ -8,7 +8,7 @@ const Navbar: React.FC = () => {
 				href='/'
 				className='py-2 text-2xl font-bold tracking-tighter transition-colors text-accent-content hover:text-primary'
 			>
-				{PROJECT_NAME}
+				{config.appName}
 			</a>
 			<button className='btn btn-primary btn-sm'>Login</button>
 		</div>

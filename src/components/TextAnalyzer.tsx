@@ -11,15 +11,20 @@ import {
 	ShieldExclamationIcon,
 	XCircleIcon,
 } from '@heroicons/react/24/outline';
-import { cleanText } from '@/utils';
+import { cleanText } from '@/libs';
 import { useMutation } from '@tanstack/react-query';
 import { ApiResponse, EnhancedText } from '@/app/models';
 import { toast } from 'react-toastify';
+import config, { MAX_CHARACTERS } from '@/config';
 
 export default function TextAnalyzer() {
 	const [currentText, setCurrentText] = useState('');
 
-	const hasAnyText = cleanText(currentText).length > 0;
+	const cleanedText = cleanText(currentText);
+	const characterCount = cleanedText.length;
+	const isOverLimit = characterCount > MAX_CHARACTERS;
+	const hasAnyText = cleanedText.length > 0;
+	const isTextValid = hasAnyText && !isOverLimit;
 
 	const { mutate, data, error, isPending } = useMutation<
 		EnhancedText,
@@ -63,8 +68,12 @@ export default function TextAnalyzer() {
 		}
 	};
 
+	const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+		setCurrentText(e.target.value);
+	};
+
 	const sendRequestIfCan = () => {
-		if (hasAnyText && !isPending) {
+		if (isTextValid && !isPending) {
 			mutate({ text: currentText });
 		}
 	};
@@ -93,22 +102,37 @@ export default function TextAnalyzer() {
 		<div className='mt-20 space-y-7 max-md:mt-10'>
 			<div className='card'>
 				<form onSubmit={handleSubmit}>
-					<textarea
-						name='text'
-						value={currentText}
-						onChange={(e) => setCurrentText(e.target.value)}
-						onKeyDown={handleKeyDown}
-						placeholder='Type here'
-						className='w-full max-md:min-h-[25vh] min-h-40 text-base-content text-base max-md:text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary'
-					/>
-					<div className='flex items-center justify-between pt-4'>
+					<div className='relative pt-4'>
+						<textarea
+							name='text'
+							value={currentText}
+							onChange={handleTextChange}
+							onKeyDown={handleKeyDown}
+							placeholder='Type here'
+							className={`w-full max-md:min-h-[25vh] min-h-40 text-base-content text-base max-md:text-sm border rounded-lg px-3 py-2 focus:outline-none focus:ring-1 ${
+								isOverLimit
+									? 'border-error focus:border-error focus:ring-error'
+									: 'border-slate-200 focus:border-primary focus:ring-primary'
+							}`}
+						/>
+						<div className='absolute -top-3 right-1'>
+							<p
+								className={`text-xs px-1 py-1 rounded ${
+									isOverLimit ? 'text-error' : 'text-slate-300'
+								}`}
+							>
+								{characterCount}/{MAX_CHARACTERS}
+							</p>
+						</div>
+					</div>
+					<div className='flex items-center justify-between pt-4 gap-4'>
+						{error && (
+							<div className='flex items-start gap-2'>
+								<LanguageIcon className='size-6 text-error' />
+								<span className='text-error text-left'>{error.message}</span>
+							</div>
+						)}
 						<p className='flex items-center gap-2 text-slate-800'>
-							{error && (
-								<>
-									<LanguageIcon className='size-6 text-error' />
-									<span className='text-error'>{error.message}</span>
-								</>
-							)}
 							{data && (
 								<>
 									{data?.hasMistakes ? (
@@ -120,11 +144,10 @@ export default function TextAnalyzer() {
 								</>
 							)}
 						</p>
-
 						<button
 							type='submit'
 							className={`btn btn-primary ${
-								!hasAnyText || isPending ? 'btn-disabled' : ''
+								!isTextValid || isPending ? 'btn-disabled' : ''
 							}`}
 						>
 							{isPending ? (
