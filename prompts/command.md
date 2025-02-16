@@ -101,6 +101,6 @@ If the input is not in English or consists of meaningless characters, return:
 
 ```json
 {
-	"error": "It's not English or gibberish"
+	"error": "I can't understand you 🥹"
 }
 ```

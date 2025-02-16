@@ -15,7 +15,7 @@ body {
 
 @layer utilities {
 	.padding {
-		@apply py-12 sm:py-24 max-md:px-4;
+		@apply py-12 sm:py-24 max-md:px-4 px-2;
 	}
 
 	.padding-x {

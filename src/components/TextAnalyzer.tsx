@@ -5,6 +5,7 @@ import {
 	BeakerIcon,
 	BookOpenIcon,
 	CheckCircleIcon,
+	ClipboardDocumentListIcon,
 	DocumentDuplicateIcon,
 	ExclamationCircleIcon,
 	LanguageIcon,
@@ -15,7 +16,7 @@ import { cleanText } from '@/libs';
 import { useMutation } from '@tanstack/react-query';
 import { ApiResponse, EnhancedText } from '@/app/models';
 import { toast } from 'react-toastify';
-import config, { MAX_CHARACTERS } from '@/config';
+import { MAX_CHARACTERS } from '@/config';
 
 export default function TextAnalyzer() {
 	const [currentText, setCurrentText] = useState('');
@@ -78,9 +79,24 @@ export default function TextAnalyzer() {
 		}
 	};
 
-	const copyText = async (text?: string) => {
+	const pasteText = async () => {
+		let pastedText = '';
+		try {
+			pastedText = await navigator.clipboard.readText();
+		} catch (error) {
+			console.error('Failed to paste text from clipboard:', error);
+		}
+		if (pastedText && pastedText.length > 0) {
+			setCurrentText(pastedText);
+			setTimeout(() => {
+				sendRequestIfCan();
+			}, 100);
+		}
+	};
+
+	const copyText = (text?: string) => {
 		if (text) {
-			navigator.clipboard.writeText(text);
+			navigator.clipboard.writeText(text.replace(/\*\*(.*?)\*\*/g, '$1'));
 			toast.success('Text copied to clipboard', {
 				toastId: 'copy-text',
 				autoClose: 2000,
@@ -109,7 +125,7 @@ export default function TextAnalyzer() {
 							onChange={handleTextChange}
 							onKeyDown={handleKeyDown}
 							placeholder='Type here'
-							className={`w-full max-md:min-h-[25vh] min-h-40 text-base-content text-base max-md:text-sm border rounded-lg px-3 py-2 focus:outline-none focus:ring-1 ${
+							className={`w-full max-md:min-h-[25vh] max-sm:min-h-[20vh] min-h-40 text-base-content text-base max-md:text-sm border rounded-lg px-3 py-2 focus:outline-none focus:ring-1 ${
 								isOverLimit
 									? 'border-error focus:border-error focus:ring-error'
 									: 'border-slate-200 focus:border-primary focus:ring-primary'
@@ -140,22 +156,33 @@ export default function TextAnalyzer() {
 									) : (
 										<CheckCircleIcon className='text-green-500 size-6' />
 									)}
-									{data?.hasMistakes ? 'Mistakes found' : 'No mistakes, nice!'}
+									{data?.hasMistakes
+										? 'Mistakes found'
+										: 'No mistakes, excellent!'}
 								</>
 							)}
 						</p>
-						<button
-							type='submit'
-							className={`btn btn-primary ${
-								!isTextValid || isPending ? 'btn-disabled' : ''
-							}`}
-						>
-							{isPending ? (
-								<span className='loading loading-dots loading-sm'></span>
-							) : (
-								'Analyze text'
-							)}
-						</button>
+						<div className='flex items-center gap-2'>
+							<button
+								className='btn btn-neutral max-md:hidden hidden'
+								onClick={pasteText}
+							>
+								<ClipboardDocumentListIcon className='size-6' />
+							</button>
+
+							<button
+								type='submit'
+								className={`btn btn-primary ${
+									!isTextValid || isPending ? 'btn-disabled' : ''
+								}`}
+							>
+								{isPending ? (
+									<span className='loading loading-dots loading-sm'></span>
+								) : (
+									'Analyze text'
+								)}
+							</button>
+						</div>
 					</div>
 				</form>
 				{data && data.mistakes && data.mistakes.length > 0 && data.text && (
