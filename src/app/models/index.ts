@@ -14,7 +14,6 @@ export interface EnhancedStrings {
 
 export interface EnhancedText {
 	text: string;
-	hasMistakes: boolean;
 	mistakes?: Mistake[];
 	enhanced?: EnhancedStrings;
 }

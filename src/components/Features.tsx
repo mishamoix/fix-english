@@ -1,32 +1,35 @@
-'use client';
-
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
 	AcademicCapIcon,
 	PencilSquareIcon,
 	RocketLaunchIcon,
 } from '@heroicons/react/24/outline';
 
-const features = [
-	{
-		title: 'Expert Guidance',
-		description:
-			'Receive expert feedback and insights to level up your writing.',
-		icon: AcademicCapIcon,
-	},
-	{
-		title: 'Real-time Analysis',
-		description: 'Get instant suggestions while you write for better clarity.',
-		icon: PencilSquareIcon,
-	},
-	{
-		title: 'Boost Productivity',
-		description: 'Enhance efficiency with smart tools designed for writers.',
-		icon: RocketLaunchIcon,
-	},
-];
-
 export default function Features() {
+	const features = useMemo(
+		() => [
+			{
+				title: 'Expert Guidance',
+				description:
+					'Receive expert feedback and insights to level up your writing.',
+				icon: AcademicCapIcon,
+			},
+			{
+				title: 'Real-time Analysis',
+				description:
+					'Get instant suggestions while you write for better clarity.',
+				icon: PencilSquareIcon,
+			},
+			{
+				title: 'Boost Productivity',
+				description:
+					'Enhance efficiency with smart tools designed for writers.',
+				icon: RocketLaunchIcon,
+			},
+		],
+		[]
+	);
+
 	return (
 		<section className='max-w-4xl mx-auto padding'>
 			<h2 className='mb-8 text-4xl font-bold text-center'>Features</h2>

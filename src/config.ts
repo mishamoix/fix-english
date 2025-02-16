@@ -2,7 +2,7 @@ export const GITHUB_URL = 'https://github.com/username/repo';
 export const SUPPORT_EMAIL = 'someone@example.com';
 
 export const DEFAULT_LLM = 'chatgpt';
-export const OPENAI_MODEL = 'gpt-4o';
+export const OPENAI_MODEL = 'o1-mini';
 export const ANTHROPIC_MODEL = 'claude-3-5-sonnet-latest';
 
 export const MAX_CHARACTERS = 600;
@@ -43,7 +43,7 @@ const config = {
 		// REQUIRED — the path to log in users. It's use to protect private routes (like /dashboard). It's used in apiClient (/libs/api.js) upon 401 errors from our API
 		loginUrl: '',
 		// REQUIRED — the path you want to redirect users after successfull login (i.e. /dashboard, /private). This is normally a private page for users to manage their accounts. It's used in apiClient (/libs/api.js) upon 401 errors from our API & in ButtonSignin.js
-		callbackUrl: '',
+		callbackUrl: '/',
 	},
 	llm: {
 		// Default LLM to use

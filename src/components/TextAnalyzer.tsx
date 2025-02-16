@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	BeakerIcon,
 	BookOpenIcon,
 	CheckCircleIcon,
+	ClipboardDocumentListIcon,
 	DocumentDuplicateIcon,
 	ExclamationCircleIcon,
 	LanguageIcon,
@@ -12,10 +13,11 @@ import {
 	XCircleIcon,
 } from '@heroicons/react/24/outline';
 import { cleanText } from '@/libs';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, QueryClient } from '@tanstack/react-query';
 import { ApiResponse, EnhancedText } from '@/app/models';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import config, { MAX_CHARACTERS } from '@/config';
+import { signIn, useSession } from 'next-auth/react';
 
 export default function TextAnalyzer() {
 	const [currentText, setCurrentText] = useState('');
@@ -25,6 +27,15 @@ export default function TextAnalyzer() {
 	const isOverLimit = characterCount > MAX_CHARACTERS;
 	const hasAnyText = cleanedText.length > 0;
 	const isTextValid = hasAnyText && !isOverLimit;
+	const { data: session, status } = useSession();
+
+	useEffect(() => {
+		const savedText = localStorage.getItem('current_user_text');
+		if (savedText) {
+			setCurrentText(savedText);
+			localStorage.removeItem('current_user_text');
+		}
+	}, []);
 
 	const { mutate, data, error, isPending } = useMutation<
 		EnhancedText,
@@ -40,21 +51,25 @@ export default function TextAnalyzer() {
 				body: JSON.stringify({ text }),
 			});
 
-			if (!response.ok) {
-				throw new Error('Failed to fetch data');
-			}
-
 			const data: ApiResponse = await response.json();
-
 			console.log('data', data);
+
 			if ('error' in data) {
 				throw new Error(data.error);
+			}
+
+			if (!response.ok) {
+				throw new Error('Failed to fetch data');
 			}
 
 			return data;
 		},
 		retry: 0,
 	});
+
+	const hasMistakes = data?.mistakes && data?.mistakes.length > 0;
+
+	const isLoggedIn = status === 'authenticated' && session;
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -73,20 +88,37 @@ export default function TextAnalyzer() {
 	};
 
 	const sendRequestIfCan = () => {
+		if (!isLoggedIn) {
+			handleLogin();
+			return;
+		}
+
 		if (isTextValid && !isPending) {
 			mutate({ text: currentText });
 		}
 	};
 
-	const copyText = async (text?: string) => {
+	const pasteText = async () => {
+		let pastedText = '';
+		try {
+			pastedText = await navigator.clipboard.readText();
+		} catch (error) {
+			console.error('Failed to paste text from clipboard:', error);
+		}
+		if (pastedText && pastedText.length > 0) {
+			setCurrentText(pastedText);
+			setTimeout(() => {
+				sendRequestIfCan();
+			}, 100);
+		}
+	};
+
+	const copyText = (text?: string) => {
 		if (text) {
-			navigator.clipboard.writeText(text);
+			navigator.clipboard.writeText(text.replace(/\*\*(.*?)\*\*/g, '$1'));
 			toast.success('Text copied to clipboard', {
-				toastId: 'copy-text',
-				autoClose: 2000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				theme: 'colored',
+				id: 'copy-text',
+				duration: 2000,
 			});
 		}
 	};
@@ -98,8 +130,13 @@ export default function TextAnalyzer() {
 		  }))
 		: [];
 
+	const handleLogin = () => {
+		localStorage.setItem('current_user_text', currentText);
+		signIn('google', { callbackUrl: config.auth.callbackUrl });
+	};
+
 	return (
-		<div className='mt-20 space-y-7 max-md:mt-10'>
+		<div className='mt-20 space-y-10 max-md:mt-10'>
 			<div className='card'>
 				<form onSubmit={handleSubmit}>
 					<div className='relative pt-4'>
@@ -109,7 +146,7 @@ export default function TextAnalyzer() {
 							onChange={handleTextChange}
 							onKeyDown={handleKeyDown}
 							placeholder='Type here'
-							className={`w-full max-md:min-h-[25vh] min-h-40 text-base-content text-base max-md:text-sm border rounded-lg px-3 py-2 focus:outline-none focus:ring-1 ${
+							className={`w-full max-md:min-h-[25vh] max-sm:min-h-[20vh] min-h-40 text-base-content text-base border rounded-lg px-3 py-2 focus:outline-none focus:ring-1 ${
 								isOverLimit
 									? 'border-error focus:border-error focus:ring-error'
 									: 'border-slate-200 focus:border-primary focus:ring-primary'
@@ -132,30 +169,43 @@ export default function TextAnalyzer() {
 								<span className='text-error text-left'>{error.message}</span>
 							</div>
 						)}
-						<p className='flex items-center gap-2 text-slate-800'>
+						<p className='flex items-start gap-2 text-slate-800'>
 							{data && (
 								<>
-									{data?.hasMistakes ? (
+									{hasMistakes ? (
 										<XCircleIcon className='size-6 text-error' />
 									) : (
 										<CheckCircleIcon className='text-green-500 size-6' />
 									)}
-									{data?.hasMistakes ? 'Mistakes found' : 'No mistakes, nice!'}
+									<span className='text-left'>
+										{hasMistakes ? 'Mistakes found' : 'No mistakes, excellent!'}
+									</span>
 								</>
 							)}
 						</p>
-						<button
-							type='submit'
-							className={`btn btn-primary ${
-								!isTextValid || isPending ? 'btn-disabled' : ''
-							}`}
-						>
-							{isPending ? (
-								<span className='loading loading-dots loading-sm'></span>
-							) : (
-								'Analyze text'
-							)}
-						</button>
+						<div className='flex items-center gap-2'>
+							<button
+								className='btn btn-neutral max-md:hidden hidden'
+								onClick={pasteText}
+							>
+								<ClipboardDocumentListIcon className='size-6' />
+							</button>
+
+							<button
+								type='submit'
+								className={`btn btn-primary ${
+									!isTextValid || isPending ? 'btn-disabled' : ''
+								}`}
+							>
+								{isPending || status === 'loading' ? (
+									<span className='loading loading-dots loading-sm'></span>
+								) : isLoggedIn ? (
+									'Analyze text'
+								) : (
+									'Login & Analyze'
+								)}
+							</button>
+						</div>
 					</div>
 				</form>
 				{data && data.mistakes && data.mistakes.length > 0 && data.text && (

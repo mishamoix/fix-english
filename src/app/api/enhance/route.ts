@@ -5,33 +5,43 @@ import path from 'path';
 import fs from 'fs/promises';
 import config, { MAX_CHARACTERS } from '@/config';
 import { cleanText } from '@/libs';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/libs/next-auth';
+import User from '@/app/models/User';
+import connectMongo from '@/libs/mongoose';
+
+const getUser = async () => {
+	const session = await getServerSession(authOptions);
+
+	if (!session) {
+		return null;
+	}
+
+	await connectMongo();
+
+	const result = await User.findById(session.user.id);
+	return result;
+};
 
 export async function POST(req: NextRequest) {
 	try {
-		// if (process.env.NODE_ENV === 'development') {
-		// 	return NextResponse.json({
-		// 		hasMistakes: true,
-		// 		text: 'How is **your**',
-		// 		mistakes: [
-		// 			{
-		// 				error: 'yor',
-		// 				corrected: 'your',
-		// 				explanation:
-		// 					"Spelling error. 'Your' is the correct possessive form of 'you'.",
-		// 				rule: "'Your' indicates possession, meaning something that belongs to 'you'.",
-		// 				example: 'Is your phone working?',
-		// 			},
-		// 		],
-		// 		enhanced: {
-		// 			linkedin: 'How is your recent project progressing?',
-		// 			email: 'I hope this email finds you well. How is your current task?',
-		// 			whatsapp: "How's ur?",
-		// 		},
-		// 	});
-		// }
+		const user = await getUser();
+
+		if (!user) {
+			return NextResponse.json(
+				{ error: 'Unauthorized, please login' },
+				{ status: 401 }
+			);
+		}
+
+		if (user.hasAccess) {
+			return NextResponse.json(
+				{ error: 'You have been blocked, please contact support' },
+				{ status: 403 }
+			);
+		}
 
 		const { text } = await req.json();
-
 		const trimmedText = cleanText(text);
 
 		if (!trimmedText || trimmedText === '') {
@@ -45,8 +55,12 @@ export async function POST(req: NextRequest) {
 				{ status: 200 }
 			);
 		}
+
+		user.numberOfRequests++;
+		await user.save();
+
 		const systemPrompt = await getSystemPrompt();
-		console.log('Gpt requested');
+		console.log('Gpt requested with text:', trimmedText);
 
 		let data: string | null = null;
 		if (config.llm.default === 'chatgpt') {
@@ -54,7 +68,7 @@ export async function POST(req: NextRequest) {
 				model: config.llm.openaiModel,
 				messages: [
 					{ role: 'system', content: systemPrompt },
-					{ role: 'user', content: trimmedText },
+					{ role: 'user', content: "User's input: " + trimmedText },
 				],
 				response_format: { type: 'json_object' },
 				temperature: 1.0,
@@ -65,7 +79,7 @@ export async function POST(req: NextRequest) {
 				max_tokens: 1024,
 				messages: [
 					{ role: 'assistant', content: systemPrompt },
-					{ role: 'user', content: trimmedText },
+					{ role: 'user', content: "User's input: " + trimmedText },
 				],
 				model: config.llm.anthropicModel,
 			});

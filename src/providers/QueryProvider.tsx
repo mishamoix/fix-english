@@ -8,7 +8,6 @@ interface QueryProviderProps {
 }
 
 export function QueryProvider({ children }: QueryProviderProps) {
-	// Initialize the query client once per session
 	const [queryClient] = useState(() => new QueryClient());
 
 	return (
