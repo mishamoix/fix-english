@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 			);
 		}
 
-		if (user.hasAccess) {
+		if (user.isBlocked) {
 			return NextResponse.json(
 				{ error: 'You have been blocked, please contact support' },
 				{ status: 403 }

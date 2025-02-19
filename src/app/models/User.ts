@@ -14,9 +14,9 @@ const userSchema = new mongoose.Schema(
 			lowercase: true,
 			private: true,
 		},
-		hasAccess: {
+		isBlocked: {
 			type: Boolean,
-			default: true,
+			default: false,
 		},
 		numberOfRequests: {
 			type: Number,
