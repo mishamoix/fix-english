@@ -13,7 +13,7 @@ export default function HowItWorks() {
 				{/* Responsive video container */}
 				<div className='aspect-video'>
 					<iframe
-						src='https://www.youtube.com/embed/dQw4w9WgXcQ'
+						src='https://www.youtube.com/embed/SCVaz8DoZQQ'
 						title='How It Works Video'
 						allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
 						allowFullScreen

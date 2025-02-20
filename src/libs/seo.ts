@@ -43,7 +43,6 @@ export const getSEOTags = ({
 		...(canonicalUrlRelative && {
 			alternates: { canonical: canonicalUrlRelative },
 		}),
-		// If you want to add extra tags, you can pass them here
 		...extraTags,
 	};
 };
