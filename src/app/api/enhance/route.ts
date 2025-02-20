@@ -3,7 +3,12 @@ import anthropic from '@/libs/anthropicClient';
 import openai from '@/libs/openaiClient';
 import path from 'path';
 import fs from 'fs/promises';
-import config, { MAX_CHARACTERS } from '@/config';
+import config, {
+	DEFAULT_LLM,
+	MAX_CHARACTERS,
+	OPENAI_MODEL,
+	ANTHROPIC_MODEL,
+} from '@/config';
 import { cleanText } from '@/libs';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/libs/next-auth';
@@ -63,9 +68,9 @@ export async function POST(req: NextRequest) {
 		console.log('Gpt requested with text:', trimmedText);
 
 		let data: string | null = null;
-		if (config.llm.default === 'chatgpt') {
+		if (DEFAULT_LLM === 'chatgpt') {
 			const response = await openai.chat.completions.create({
-				model: config.llm.openaiModel,
+				model: OPENAI_MODEL,
 				messages: [
 					{ role: 'system', content: systemPrompt },
 					{ role: 'user', content: "User's input: " + trimmedText },
@@ -81,7 +86,7 @@ export async function POST(req: NextRequest) {
 					{ role: 'assistant', content: systemPrompt },
 					{ role: 'user', content: "User's input: " + trimmedText },
 				],
-				model: config.llm.anthropicModel,
+				model: ANTHROPIC_MODEL,
 			});
 			if (response.content[0].type === 'text') {
 				data = response.content[0].text;

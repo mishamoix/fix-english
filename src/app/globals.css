@@ -15,7 +15,7 @@ body {
 
 @layer utilities {
 	.padding {
-		@apply py-12 sm:py-24 max-md:px-4 px-2;
+		@apply px-2 py-12 sm:py-24 max-md:px-4;
 	}
 
 	.padding-x {
@@ -50,6 +50,6 @@ body {
 /* Added new component style for card */
 @layer components {
 	.card {
-		@apply px-6 py-4 border rounded-lg shadow-xl border-slate-100 shadow-slate-200;
+		@apply px-6 py-4 border rounded-lg shadow-xl border-slate-100 shadow-slate-200 max-sm:px-3 max-sm:py-2;
 	}
 }

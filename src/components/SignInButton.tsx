@@ -10,7 +10,7 @@ const SignInButton = () => {
 
 	return (
 		<button className='btn btn-primary btn-sm' onClick={handleClick}>
-			Login
+			Sign In
 		</button>
 	);
 };

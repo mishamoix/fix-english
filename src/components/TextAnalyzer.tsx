@@ -98,21 +98,6 @@ export default function TextAnalyzer() {
 		}
 	};
 
-	const pasteText = async () => {
-		let pastedText = '';
-		try {
-			pastedText = await navigator.clipboard.readText();
-		} catch (error) {
-			console.error('Failed to paste text from clipboard:', error);
-		}
-		if (pastedText && pastedText.length > 0) {
-			setCurrentText(pastedText);
-			setTimeout(() => {
-				sendRequestIfCan();
-			}, 100);
-		}
-	};
-
 	const copyText = (text?: string) => {
 		if (text) {
 			navigator.clipboard.writeText(text.replace(/\*\*(.*?)\*\*/g, '$1'));
@@ -145,7 +130,7 @@ export default function TextAnalyzer() {
 							value={currentText}
 							onChange={handleTextChange}
 							onKeyDown={handleKeyDown}
-							placeholder='Type here'
+							placeholder='Write your text here. e.g. "I has went to the market yesterday, and buyed some apples and they was fresh."'
 							className={`w-full max-md:min-h-[25vh] max-sm:min-h-[20vh] min-h-40 text-base-content text-base border rounded-lg px-3 py-2 focus:outline-none focus:ring-1 ${
 								isOverLimit
 									? 'border-error focus:border-error focus:ring-error'
@@ -154,7 +139,7 @@ export default function TextAnalyzer() {
 						/>
 						<div className='absolute -top-3 right-1'>
 							<p
-								className={`text-xs px-1 py-1 rounded ${
+								className={`text-xs px-1 py-1 max-sm:py-2 rounded ${
 									isOverLimit ? 'text-error' : 'text-slate-300'
 								}`}
 							>
@@ -162,11 +147,11 @@ export default function TextAnalyzer() {
 							</p>
 						</div>
 					</div>
-					<div className='flex items-center justify-between pt-4 gap-4'>
+					<div className='flex items-center justify-between gap-4 pt-4'>
 						{error && (
 							<div className='flex items-start gap-2'>
 								<LanguageIcon className='size-6 text-error' />
-								<span className='text-error text-left'>{error.message}</span>
+								<span className='text-left text-error'>{error.message}</span>
 							</div>
 						)}
 						<p className='flex items-start gap-2 text-slate-800'>
@@ -183,33 +168,24 @@ export default function TextAnalyzer() {
 								</>
 							)}
 						</p>
-						<div className='flex items-center gap-2'>
-							<button
-								className='btn btn-neutral max-md:hidden hidden'
-								onClick={pasteText}
-							>
-								<ClipboardDocumentListIcon className='size-6' />
-							</button>
-
-							<button
-								type='submit'
-								className={`btn btn-primary ${
-									!isTextValid || isPending ? 'btn-disabled' : ''
-								}`}
-							>
-								{isPending || status === 'loading' ? (
-									<span className='loading loading-dots loading-sm'></span>
-								) : isLoggedIn ? (
-									'Analyze text'
-								) : (
-									'Login & Analyze'
-								)}
-							</button>
-						</div>
+						<button
+							type='submit'
+							className={`btn btn-primary ${
+								!isTextValid || isPending ? 'btn-disabled' : ''
+							}`}
+						>
+							{isPending || status === 'loading' ? (
+								<span className='loading loading-dots loading-sm'></span>
+							) : isLoggedIn ? (
+								'Analyze text'
+							) : (
+								'Sign In & Analyze'
+							)}
+						</button>
 					</div>
 				</form>
 				{data && data.mistakes && data.mistakes.length > 0 && data.text && (
-					<div className='relative pr-20 pl-3 py-2 mt-4 text-left border border-green-200 rounded text-slate-800 bg-green-50/70'>
+					<div className='relative py-2 pl-3 pr-20 mt-4 text-left border border-green-200 rounded text-slate-800 bg-green-50/70'>
 						<button
 							onClick={() => copyText(data.text)}
 							className='absolute top-1 right-1 btn btn-ghost btn-sm'

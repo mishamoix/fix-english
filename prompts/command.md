@@ -47,13 +47,13 @@ This command is designed to check English text for grammar, punctuation, and spe
 - Property "text" should be corrected with the correct words marked using markdown bold (**corrected**).
 - Don't use markdown bold in the mistackes, it'll be styled separately.
 
-User's input: I has went to the market yesterday, and buyed some apples they was fresh. This the apples was so good.
+User's input: I has went to the market yesterday, and buyed some apples and they was fresh. This the apples was so good.
 
 The output MUST be in JSON format with the following structure:
 
 ```json
 {
-	"text": "I **had gone** to the market yesterday, and **bought** some apples they **were** fresh. **This apples** was so good.",
+	"text": "I **had gone** to the market yesterday, and **bought** some apples and they **were** fresh. **This apples** was so good.",
 	"mistakes": [
 		{
 			"error": "has went",

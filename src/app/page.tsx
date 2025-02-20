@@ -4,6 +4,7 @@ import Hero from '@/components/Hero';
 import TextAnalyzer from '@/components/TextAnalyzer';
 import ContactButton from '@/components/ContactButton';
 import ClientLayout from '@/components/LayoutClient';
+
 export default function Home() {
 	return (
 		<>

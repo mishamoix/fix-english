@@ -7,12 +7,12 @@ const Footer: React.FC = () => {
 
 	return (
 		<footer className='py-4 mt-auto border-t bg-base-200 text-base-content px-14 max-md:px-4'>
-			<div className='flex flex-col items-center justify-between px-4 mx-auto sm:flex-row max-sm:text-center gap-4'>
+			<div className='flex flex-col items-center justify-between gap-4 px-4 mx-auto sm:flex-row max-sm:text-center'>
 				<div>
-					<div className='text-lg font-bold text-slate-800'>
-						{config.appName}
-					</div>
-					<p className='text-sm text-slate-500'>{config.appDescription}</p>
+					<div className='text-lg font-bold text-slate-800'>QuickRefine</div>
+					<p className='text-sm text-slate-500'>
+						AI tool to improve your English
+					</p>
 				</div>
 				<div className='flex items-center gap-2 mt-2 sm:mt-0 max-md:flex-col max-md:gap-1 max-sm:flex-row'>
 					<a
@@ -31,7 +31,7 @@ const Footer: React.FC = () => {
 					</a>
 				</div>
 				<div className='mt-2 text-sm sm:mt-0'>
-					© {currentYear} - All rights reserved.
+					© {currentYear} - All rights reserved
 				</div>
 			</div>
 		</footer>
